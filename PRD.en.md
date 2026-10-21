@@ -18,10 +18,10 @@ Goal: keep the feature set small and get every detail right, so a reviewer comes
 
 ## 2. Users and Usage
 
-| User | Scenario |
-|---|---|
+| User                    | Scenario                                                                                                                                                               |
+| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Reviewer (primary user) | Opens the live link, tries a few searches, pages through results, deliberately pokes at edge cases (no results, last page, rapid repeated clicks), then reads the code |
-| Developer | Looking for a kind of open-source project, e.g. "the most-starred TypeScript state management libraries" |
+| Developer               | Looking for a kind of open-source project, e.g. "the most-starred TypeScript state management libraries"                                                               |
 
 Typical flow:
 
@@ -72,12 +72,12 @@ Acceptance criteria:
 
 Options:
 
-| Option | Meaning |
-|---|---|
+| Option               | Meaning                           |
+| -------------------- | --------------------------------- |
 | Best match (default) | Relevance as determined by GitHub |
-| Most stars | By star count |
-| Most forks | By fork count |
-| Recently updated | By last update time |
+| Most stars           | By star count                     |
+| Most forks           | By fork count                     |
+| Recently updated     | By last update time               |
 
 - For every option except Best match, the user can switch between descending (default) and ascending.
 - Changing the sort returns to page 1.
@@ -121,15 +121,15 @@ Acceptance criteria:
 
 Each result is a card containing:
 
-| Content | Details |
-|---|---|
-| Owner avatar | Small circle |
-| Full repository name | `owner/repo`; clicking opens GitHub in a new tab |
-| Description | At most 2 lines, truncated with an ellipsis; the line is omitted when there is no description |
-| Star count | Large numbers abbreviated, e.g. `12.3k` |
-| Fork count | Same as above |
-| Primary language | With a small coloured dot; omitted when there is no language |
-| Last updated | Relative time, e.g. "Updated 3 days ago" |
+| Content              | Details                                                                                       |
+| -------------------- | --------------------------------------------------------------------------------------------- |
+| Owner avatar         | Small circle                                                                                  |
+| Full repository name | `owner/repo`; clicking opens GitHub in a new tab                                              |
+| Description          | At most 2 lines, truncated with an ellipsis; the line is omitted when there is no description |
+| Star count           | Large numbers abbreviated, e.g. `12.3k`                                                       |
+| Fork count           | Same as above                                                                                 |
+| Primary language     | With a small coloured dot; omitted when there is no language                                  |
+| Last updated         | Relative time, e.g. "Updated 3 days ago"                                                      |
 
 The total number of results is shown above the list.
 
@@ -142,16 +142,16 @@ The total number of results is shown above the list.
 
 ### 4.7 States and Messages
 
-| Situation | What the user sees |
-|---|---|
-| No search yet | Explanation text + example keywords |
-| First search loading | Grey placeholder cards (skeleton) |
-| Changing page | The previous page stays visible, slightly faded, with a thin progress bar at the top |
-| No results | "No repositories found" + a suggestion to change keywords or remove the language filter |
-| Results may be incomplete | Yellow notice: the GitHub search timed out and some results may be missing |
-| Search quota used up | "Rate limit reached. Try again in 42s" with a live countdown; a "Retry" button appears at 0 |
-| Invalid query | "Invalid search query" + a hint on how to fix it |
-| Network error | Error explanation + "Retry" button |
+| Situation                 | What the user sees                                                                          |
+| ------------------------- | ------------------------------------------------------------------------------------------- |
+| No search yet             | Explanation text + example keywords                                                         |
+| First search loading      | Grey placeholder cards (skeleton)                                                           |
+| Changing page             | The previous page stays visible, slightly faded, with a thin progress bar at the top        |
+| No results                | "No repositories found" + a suggestion to change keywords or remove the language filter     |
+| Results may be incomplete | Yellow notice: the GitHub search timed out and some results may be missing                  |
+| Search quota used up      | "Rate limit reached. Try again in 42s" with a live countdown; a "Retry" button appears at 0 |
+| Invalid query             | "Invalid search query" + a hint on how to fix it                                            |
+| Network error             | Error explanation + "Retry" button                                                          |
 
 Acceptance criteria:
 
@@ -173,11 +173,11 @@ Acceptance criteria:
 
 ### 6.1 GitHub API Limits
 
-| Limit | Impact on the product | Mitigation |
-|---|---|---|
-| At most 10 anonymous searches per minute | Fast paging or frequent searches get rate-limited | Search only on submit; don't re-request pages already seen; show a countdown when limited |
-| At most 1,000 results per search | Pages beyond 34 are unreachable | Compute page count from 1,000 results and tell the user |
-| Searches may time out with partial results | A few complex queries return fewer results | Show a notice |
+| Limit                                      | Impact on the product                             | Mitigation                                                                                |
+| ------------------------------------------ | ------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| At most 10 anonymous searches per minute   | Fast paging or frequent searches get rate-limited | Search only on submit; don't re-request pages already seen; show a countdown when limited |
+| At most 1,000 results per search           | Pages beyond 34 are unreachable                   | Compute page count from 1,000 results and tell the user                                   |
+| Searches may time out with partial results | A few complex queries return fewer results        | Show a notice                                                                             |
 
 ### 6.2 No Sign-in
 

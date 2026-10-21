@@ -4,18 +4,18 @@
 
 ## 1. Technology Choices
 
-| Concern | Choice | Reason |
-|---|---|---|
-| Language | TypeScript (`strict: true`, `noUncheckedIndexedAccess`) | Required; strict mode catches null/undefined bugs early |
-| Framework | React 19 | Required |
-| Build | Vite | Fast startup, minimal configuration |
-| Data fetching & caching | TanStack Query v5 | Caching, race-condition handling, loading states and retry policy out of the box |
-| URL state | Native `URLSearchParams` + a custom hook | Single page; a router library isn't needed |
-| Styling | CSS Modules + CSS custom properties | Hand-written CSS is required; custom properties make dark mode a single override |
-| Testing | Vitest + React Testing Library + MSW | MSW mocks the GitHub API, so tests never spend real quota |
-| Code quality | ESLint + Prettier | |
-| CI / deploy | GitHub Actions → GitHub Pages | |
-| Runtime | Node 24, pinned with Volta; all dependency versions pinned exactly | Vitest 5 / jsdom require Node ≥ 22.12 |
+| Concern                 | Choice                                                             | Reason                                                                           |
+| ----------------------- | ------------------------------------------------------------------ | -------------------------------------------------------------------------------- |
+| Language                | TypeScript (`strict: true`, `noUncheckedIndexedAccess`)            | Required; strict mode catches null/undefined bugs early                          |
+| Framework               | React 19                                                           | Required                                                                         |
+| Build                   | Vite                                                               | Fast startup, minimal configuration                                              |
+| Data fetching & caching | TanStack Query v5                                                  | Caching, race-condition handling, loading states and retry policy out of the box |
+| URL state               | Native `URLSearchParams` + a custom hook                           | Single page; a router library isn't needed                                       |
+| Styling                 | CSS Modules + CSS custom properties                                | Hand-written CSS is required; custom properties make dark mode a single override |
+| Testing                 | Vitest + React Testing Library + MSW                               | MSW mocks the GitHub API, so tests never spend real quota                        |
+| Code quality            | ESLint + Prettier                                                  |                                                                                  |
+| CI / deploy             | GitHub Actions → GitHub Pages                                      |                                                                                  |
+| Runtime                 | Node 24, pinned with Volta; all dependency versions pinned exactly | Vitest 5 / jsdom require Node ≥ 22.12                                            |
 
 ## 2. Directory Structure
 
@@ -115,13 +115,13 @@ interface SearchResponse {
 
 ## 5. Error Classification
 
-| HTTP situation | Class | Handling |
-|---|---|---|
-| 429, or 403 with `x-ratelimit-remaining: 0` / a `retry-after` header / a "rate limit" message | `RateLimitError` | Carries the time it's safe to retry; UI shows a countdown; never retried automatically |
-| 422 | `ValidationError` | Shows GitHub's most specific message; not retried |
-| `fetch` throws (offline, DNS, CORS…) | `NetworkError` | Retried automatically once |
-| Any other non-2xx | `ApiError` (with status) | Retried automatically once |
-| Request aborted (`AbortError`) | Re-thrown unchanged | Handled silently by TanStack Query |
+| HTTP situation                                                                                | Class                    | Handling                                                                               |
+| --------------------------------------------------------------------------------------------- | ------------------------ | -------------------------------------------------------------------------------------- |
+| 429, or 403 with `x-ratelimit-remaining: 0` / a `retry-after` header / a "rate limit" message | `RateLimitError`         | Carries the time it's safe to retry; UI shows a countdown; never retried automatically |
+| 422                                                                                           | `ValidationError`        | Shows GitHub's most specific message; not retried                                      |
+| `fetch` throws (offline, DNS, CORS…)                                                          | `NetworkError`           | Retried automatically once                                                             |
+| Any other non-2xx                                                                             | `ApiError` (with status) | Retried automatically once                                                             |
+| Request aborted (`AbortError`)                                                                | Re-thrown unchanged      | Handled silently by TanStack Query                                                     |
 
 A 403 is not automatically a rate limit (it can also be a permission error), so the classification checks the headers and message rather than the status code alone.
 
@@ -136,22 +136,22 @@ useQuery({
   queryKey: ['repos', params],
   queryFn: ({ signal }) => searchRepos(params, signal), // stale requests are aborted when params change
   enabled: params.q !== '',
-  staleTime: 5 * 60_000,             // same query within 5 minutes is not refetched
+  staleTime: 5 * 60_000, // same query within 5 minutes is not refetched
   gcTime: 10 * 60_000,
   placeholderData: keepPreviousData, // keep the previous page visible while the next one loads
   retry: (count, err) =>
     !(err instanceof RateLimitError || err instanceof ValidationError) && count < 1,
-  refetchOnWindowFocus: false,       // don't refetch when the tab regains focus
+  refetchOnWindowFocus: false, // don't refetch when the tab regains focus
 });
 ```
 
 UI state mapping:
 
-| UI | Condition |
-|---|---|
-| Skeleton | `isPending` with no data |
+| UI                                 | Condition                          |
+| ---------------------------------- | ---------------------------------- |
+| Skeleton                           | `isPending` with no data           |
 | Faded previous list + progress bar | `isPlaceholderData` / `isFetching` |
-| Error panel | `error`, rendered per error class |
+| Error panel                        | `error`, rendered per error class  |
 
 The next page is not prefetched: each prefetch costs one request, which isn't worth it under a 10-per-minute limit.
 
@@ -196,9 +196,9 @@ getPageItems(current, maxPage, siblings = 2): Array<number | 'start-ellipsis' | 
 
 ## 11. Testing
 
-| Level | Coverage |
-|---|---|
-| Unit | `getMaxPage`, `clampPage`, `getPageItems` (1 / 7 / 34 pages; current page at start, middle, end; single-page gaps); URL parsing and serialization; error classification; number and time formatting |
+| Level                   | Coverage                                                                                                                                                                                                         |
+| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Unit                    | `getMaxPage`, `clampPage`, `getPageItems` (1 / 7 / 34 pages; current page at start, middle, end; single-page gaps); URL parsing and serialization; error classification; number and time formatting              |
 | Integration (RTL + MSW) | Search only on submit; results and paging via the URL; filter change resets to page 1; out-of-range page corrected; 1,000-result cap; empty results; rate-limit countdown; 422 message; network error then retry |
 
 No test talks to the real API.
