@@ -3,7 +3,7 @@
 A small React + TypeScript app for searching public GitHub repositories, built on the
 [GitHub REST search API](https://docs.github.com/en/rest/search/search#search-repositories).
 
-**Live demo:** https://&lt;your-username&gt;.github.io/github-repo-search/
+**Live demo:** https://nsnickie.github.io/github-repo-search/
 
 <!-- Add a screenshot: docs/screenshot.png -->
 
